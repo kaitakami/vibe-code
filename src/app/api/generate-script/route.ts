@@ -253,7 +253,7 @@ async function generatePersonalizedScript(companyInfo: string, profile: LinkedIn
   const personalizationPoints = generatePersonalizationPoints(profile, companyInfo);
   
   const prompt = `
-Create a highly personalized 30-45 second video/audio script for outreach.
+Create a highly personalized 30-45 second video message for payment collection outreach that feels supportive and relationship-focused.
 
 COMPANY CONTEXT:
 ${companyInfo}
@@ -272,18 +272,19 @@ LEAD PROFILE:
 PERSONALIZATION OPPORTUNITIES:
 ${personalizationPoints.map(point => `- ${point}`).join('\n')}
 
-SCRIPT REQUIREMENTS:
+COLLECTION MESSAGE REQUIREMENTS:
 1. Write ONLY the spoken words - no stage directions, formatting, or labels
-2. Open with their name and reference something specific from their profile
-3. Connect our company's value to their current role/interests
-4. Reference their expertise or career progression naturally
-5. Include a specific, relevant call-to-action
-6. Keep it conversational and authentic (not salesy)
-7. End with a clear next step
-8. 30-45 seconds when spoken (approximately 75-115 words)
-9. No [PAUSE], [START], [END] or other formatting - just natural speech
+2. Open with their name and acknowledge their professional achievements
+3. Position the collection as a partnership opportunity to resolve together
+4. Reference their success/expertise to build rapport before discussing the matter
+5. Use language like "work together," "find a solution," "partnership," "support"
+6. Mention flexible payment options or willingness to discuss arrangements
+7. Keep it respectful, empathetic, and solutions-focused (never threatening)
+8. End with a collaborative call-to-action like "let's chat" or "work together"
+9. 30-45 seconds when spoken (approximately 75-115 words)
+10. No [PAUSE], [START], [END] or other formatting - just natural speech
 
-Make it feel like you researched them personally and genuinely see value in connecting. Write exactly what you would say in the video - nothing more, nothing less.
+Make it feel like you genuinely respect them and want to help find a mutually beneficial solution. Focus on partnership, not pressure.
 `;
 
   try {
@@ -292,7 +293,7 @@ Make it feel like you researched them personally and genuinely see value in conn
       messages: [
         {
           role: "system",
-          content: "You are an expert at creating highly personalized, authentic outreach scripts. Write only the exact words that would be spoken in a video - no formatting, stage directions, or labels. Keep it natural, conversational, and genuine."
+          content: "You are an expert at creating empathetic, relationship-focused collection messages that build rapport and offer collaboration rather than pressure. Always position collection as a partnership opportunity and focus on solutions, respect, and mutual benefit."
         },
         {
           role: "user",
