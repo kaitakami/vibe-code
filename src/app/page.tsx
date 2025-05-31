@@ -45,19 +45,43 @@ export default function Home() {
   const [companyUrl, setCompanyUrl] = useState("");
   const [linkedinUrl, setLinkedinUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [script, setScript] = useState("");
+  const [error, setError] = useState("");
+  const [showScript, setShowScript] = useState(false);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setIsLoading(true);
+    setError("");
+    setScript("");
+    setShowScript(false); // Reset script visibility
     
-    // TODO: Add actual submission logic here
-    console.log("Company URL:", companyUrl);
-    console.log("LinkedIn URL:", linkedinUrl);
-    
-    // Simulate loading
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/generate-script', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          companyUrl: companyUrl,
+          linkedinUrl: linkedinUrl
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to generate script');
+      }
+
+      setScript(data.script);
+      
+    } catch (err) {
+      console.error('Error generating script:', err);
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
+    } finally {
       setIsLoading(false);
-    }, 2000);
+    }
   }
 
   // Apple's exact animation curves and timing
@@ -121,7 +145,7 @@ export default function Home() {
                 transition: { duration: 0.15, ease: appleFastEasing }
               }}
             >
-              <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+              <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-ping" />
               <span className="text-xs font-medium text-gray-600">
                 AI-Powered Personalization
               </span>
@@ -245,6 +269,106 @@ export default function Home() {
               </HoverBorderGradient>
             </motion.div>
           </form>
+
+          {/* Results Section */}
+          {(script || error) && (
+            <motion.div
+              className="mt-12 space-y-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: appleEasing }}
+            >
+              {error && (
+                <div className="p-6 bg-red-50 border border-red-200 rounded-xl">
+                  <h3 className="text-lg font-semibold text-red-800 mb-2">Error</h3>
+                  <p className="text-red-600">{error}</p>
+                </div>
+              )}
+              
+              {script && (
+                <div className="space-y-6">
+                  {/* Video Player */}
+                  <motion.div
+                    className="p-6 bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-200 rounded-xl"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5, ease: appleEasing }}
+                  >
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <span>Generated Personalized Video</span>
+                    </h3>
+                    
+                    <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                      <video
+                        controls
+                        className="w-full h-auto rounded-lg"
+                        poster="/placeholder-poster.jpg"
+                      >
+                        <source src="/nichochi.mp4" type="video/mp4" />
+                        Your browser does not support the video tag.
+                      </video>
+                    </div>
+                    
+                    <div className="mt-4 flex items-center justify-between">
+                      <div className="flex items-center space-x-4 text-xs text-gray-500">
+                        <span>🎬 AI-generated video</span>
+                        <span>🎯 Personalized content</span>
+                        <span>📧 Ready to send</span>
+                      </div>
+                      
+                      {/* Script Toggle Button */}
+                      <motion.button
+                        onClick={() => setShowScript(!showScript)}
+                        className="flex items-center space-x-2 px-3 py-1.5 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg border border-blue-200 transition-colors"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <span>{showScript ? 'Hide Script' : 'Show Script'}</span>
+                        <motion.svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          animate={{ rotate: showScript ? 180 : 0 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </motion.svg>
+                      </motion.button>
+                    </div>
+                  </motion.div>
+
+                  {/* Collapsible Script Section */}
+                  <motion.div
+                    initial={false}
+                    animate={{ 
+                      height: showScript ? 'auto' : 0,
+                      opacity: showScript ? 1 : 0 
+                    }}
+                    transition={{ duration: 0.3, ease: appleEasing }}
+                    style={{ overflow: 'hidden' }}
+                  >
+                    {showScript && (
+                      <div className="p-6 bg-gray-50 border border-gray-200 rounded-xl">
+                        <h4 className="text-md font-semibold text-gray-900 mb-3 flex items-center space-x-2">
+                          <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                          <span>Video Script</span>
+                        </h4>
+                        <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                          <p className="text-gray-800 text-sm leading-relaxed font-medium whitespace-pre-wrap">
+                            {script}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </motion.div>
+                </div>
+              )}
+            </motion.div>
+          )}
         </motion.div>
       </motion.div>
     </WavyBackground>
