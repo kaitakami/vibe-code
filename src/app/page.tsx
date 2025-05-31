@@ -129,6 +129,20 @@ export default function Home() {
       speed="slow"
       waveOpacity={0.15}
     >
+      {/* Fixed Domu Logo */}
+      <motion.div
+        className="fixed top-6 left-6 z-50"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5, delay: 1.5, ease: [0.25, 0.1, 0.25, 1] }}
+      >
+          <img 
+            src="/domu-logo.png" 
+            alt="Domu" 
+            className="h-8 w-auto opacity-80 hover:opacity-100 transition-opacity duration-200"
+          />
+      </motion.div>
+
       <motion.div
         className="relative z-10 container mx-auto px-6 py-20 sm:py-24"
         variants={containerVariants}
