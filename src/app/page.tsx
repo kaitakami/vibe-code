@@ -1,103 +1,252 @@
-import Image from "next/image";
+"use client";
+
+import React, { useState, forwardRef } from "react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { WavyBackground } from "@/components/ui/wave-background";
+import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
+import { Zap, Target, ArrowRight, Building2, User } from "lucide-react";
+
+// Elegant input wrapper with hover border gradient
+const ElegantInput = forwardRef<
+  HTMLInputElement,
+  React.ComponentProps<typeof Input> & {
+    wrapperClassName?: string;
+  }
+>(({ wrapperClassName = "", className, ...props }, ref) => {
+  return (
+    <motion.div
+      className={`w-full ${wrapperClassName}`}
+      whileHover={{ scale: 1.002 }}
+      transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
+    >
+      <HoverBorderGradient
+        containerClassName="rounded-xl w-full"
+        className="w-full p-0"
+        as="div"
+        duration={3}
+        clockwise={true}
+      >
+        <Input
+          ref={ref}
+          className={`h-12 text-sm border-0 bg-white focus:ring-0 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 px-4 rounded-xl text-gray-900 placeholder:text-gray-500 ${className}`}
+          {...props}
+        />
+      </HoverBorderGradient>
+    </motion.div>
+  );
+});
+
+ElegantInput.displayName = "ElegantInput";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [companyUrl, setCompanyUrl] = useState("");
+  const [linkedinUrl, setLinkedinUrl] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setIsLoading(true);
+    
+    // TODO: Add actual submission logic here
+    console.log("Company URL:", companyUrl);
+    console.log("LinkedIn URL:", linkedinUrl);
+    
+    // Simulate loading
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+  }
+
+  // Apple's exact animation curves and timing
+  const appleEasing = [0.25, 0.1, 0.25, 1];
+  const appleFastEasing = [0.4, 0, 0.2, 1];
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.8,
+        ease: appleEasing,
+        staggerChildren: 0.08,
+        delayChildren: 0.3
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { 
+      opacity: 0,
+      y: 16,
+      scale: 0.98
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.6,
+        ease: appleEasing
+      }
+    }
+  };
+
+  return (
+    <WavyBackground 
+      className="min-h-screen"
+      containerClassName="min-h-screen"
+      colors={["#f8fafc", "#f1f5f9", "#e2e8f0", "#cbd5e1", "#94a3b8"]}
+      waveWidth={60}
+      backgroundFill="white"
+      blur={12}
+      speed="slow"
+      waveOpacity={0.15}
+    >
+      <motion.div
+        className="relative z-10 container mx-auto px-6 py-20 sm:py-24"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {/* Hero Section */}
+        <div className="text-center mb-20">
+          <motion.div variants={itemVariants} className="flex justify-center mb-8">
+            <motion.div 
+              className="flex items-center space-x-2 bg-white/90 backdrop-blur-sm border border-gray-100 px-3 py-1.5 rounded-full shadow-sm"
+              whileHover={{ 
+                scale: 1.05,
+                transition: { duration: 0.15, ease: appleFastEasing }
+              }}
+            >
+              <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+              <span className="text-xs font-medium text-gray-600">
+                AI-Powered Personalization
+              </span>
+            </motion.div>
+          </motion.div>
+          
+          <motion.h1 
+            variants={itemVariants}
+            className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-8 leading-tight tracking-tight"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            Create Personalized
+            <br />
+            <span className="text-blue-600">Videos & Audio</span>
+            <br />
+            <span className="text-2xl sm:text-3xl lg:text-4xl text-gray-500 font-light">
+              That Collects Leads
+            </span>
+          </motion.h1>
+          
+          <motion.p 
+            variants={itemVariants}
+            className="text-lg text-gray-600 mb-16 max-w-2xl mx-auto leading-relaxed font-light"
           >
-            Read our docs
-          </a>
+            Transform your outreach with AI that analyzes LinkedIn profiles and company data 
+            to generate compelling, personalized content that actually gets responses.
+          </motion.p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+
+        {/* Main Form */}
+        <motion.div variants={itemVariants} className="max-w-lg mx-auto">
+          <form onSubmit={handleSubmit} className="space-y-8">
+            {/* Company URL Input */}
+            <motion.div className="space-y-3">
+              <Label htmlFor="company-url" className="text-sm font-semibold text-gray-900 flex items-center space-x-2 ml-1">
+                <Building2 className="h-4 w-4 text-blue-600" />
+                <span>Company Website</span>
+              </Label>
+              <ElegantInput
+                id="company-url"
+                type="url"
+                placeholder="https://domu.ai"
+                value={companyUrl}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCompanyUrl(e.target.value)}
+                required
+              />
+              <p className="text-xs text-gray-500 flex items-center space-x-1.5 font-light ml-1">
+                <Zap className="h-3 w-3" />
+                <span>We'll analyze your company's context and recent updates</span>
+              </p>
+            </motion.div>
+
+            {/* LinkedIn URL Input */}
+            <motion.div className="space-y-3">
+              <Label htmlFor="linkedin-url" className="text-sm font-semibold text-gray-900 flex items-center space-x-2 ml-1">
+                <User className="h-4 w-4 text-purple-600" />
+                <span>Lead's LinkedIn Profile</span>
+              </Label>
+              <ElegantInput
+                id="linkedin-url"
+                type="url"
+                placeholder="https://linkedin.com/in/kaitakami"
+                value={linkedinUrl}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLinkedinUrl(e.target.value)}
+                required
+              />
+              <p className="text-xs text-gray-500 flex items-center space-x-1.5 font-light ml-1">
+                <Target className="h-3 w-3" />
+                <span>We'll extract their interests, posts, and professional background</span>
+              </p>
+            </motion.div>
+
+            {/* Submit Button */}
+            <motion.div
+              className="pt-4"
+              whileHover={{ 
+                scale: 1.005,
+                transition: { duration: 0.15, ease: appleFastEasing }
+              }}
+              whileTap={{ 
+                scale: 0.995,
+                transition: { duration: 0.1, ease: appleFastEasing }
+              }}
+            >
+              <HoverBorderGradient
+                containerClassName="rounded-xl w-full bg-blue-600 hover:bg-blue-700"
+                className="w-full p-0 bg-blue-600 hover:bg-blue-700"
+                as="div"
+                duration={2.5}
+                clockwise={false}
+              >
+                <Button
+                  type="submit"
+                  disabled={isLoading || !companyUrl || !linkedinUrl}
+                  className="w-full h-12 text-base font-semibold bg-blue-600 hover:bg-blue-700 text-white shadow-none border-0 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  {isLoading ? (
+                    <motion.div 
+                      className="flex items-center space-x-2"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.25, ease: appleEasing }}
+                    >
+                      <motion.div 
+                        className="h-4 w-4 border-2 border-white border-t-transparent rounded-full"
+                        animate={{ rotate: 360 }}
+                        transition={{ 
+                          duration: 0.8, 
+                          repeat: Infinity, 
+                          ease: "linear" 
+                        }}
+                      />
+                      <span>Creating your content...</span>
+                    </motion.div>
+                  ) : (
+                    <div className="flex items-center space-x-2">
+                      <span>Generate Personalized Content</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </div>
+                  )}
+                </Button>
+              </HoverBorderGradient>
+            </motion.div>
+          </form>
+        </motion.div>
+      </motion.div>
+    </WavyBackground>
   );
 }
